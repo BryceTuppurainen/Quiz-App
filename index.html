@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Creator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1>Quiz Creator</h1>
+        <p>This page allows you to create a new quiz to practice with. Simply paste new .quiz (which are really just JSONs) into this directory to add custom quizzes</p>
+    </header>
+    <main>
+        <div>
+
+            <h3>What's the name of this quiz?</h3>
+            <input type="text" id="quiz-name" name="quiz-name" placeholder="Quiz Name">
+            <button onclick="addQuizName()">Rename Quiz</button>
+
+            <h3>Create Question</h3>
+            <div class="question-wrapper">
+            <label for="question">Question: </label><input name="question" id="question" type="text">
+            <label for="answer">Answer: </label><input name="answer" id="answer" type="text">
+        </div>
+            <input type="button" onclick="addQuestion()" value="Add Question">
+            
+            <div id='output'>
+            </div>
+
+            <form action="./create-quiz.php" method="POST">
+                <input type="hidden" name="questions" id="questions" value="questions">
+                <input type="submit" value="Create Quiz">
+            </form>
+        </div>
+    </main>
+
+    
+    <script>
+        let questions = {"file":"Quiz"};
+
+        const updateOutput = () => {
+            let output = '<p>' + questions.file + '</p><p>Questions</p>';
+
+            for (const question in questions) {
+                if (question != 'file') {
+                    output += '<p>' + question + " " + questions[question] + " <input type='button' onclick='removeQuestion(\""+question+"\")' value='Remove Question'></input></p>";
+                }
+            }
+            document.getElementById('output').innerHTML = output;
+            document.getElementById('questions').value = JSON.stringify(questions);
+        }
+
+        const addQuestion = () => {
+            let question = document.getElementById('question').value;
+            let answer = document.getElementById('answer').value;
+
+            questions[question] = answer;
+
+            updateOutput();
+        }
+
+        const removeQuestion = (question) => {
+            delete questions[question];
+            updateOutput();
+        }
+
+        const addQuizName = () => {
+            questions.file = document.getElementById('quiz-name').value;
+            updateOutput();
+        }
+
+        updateOutput();
+    </script>
+
+</body>
+
+</html>
