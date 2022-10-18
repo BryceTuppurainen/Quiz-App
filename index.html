@@ -70,6 +70,11 @@
 
         const addQuizName = () => {
             questions.file = document.getElementById('quiz-name').value;
+            if (questions.file.contains('.quiz')) {
+                questions.file = questions.file.replace('.quiz', '');
+            } else if (questions.file.contains('/')) {
+                questions.file = questions.file.replace('/', '-');
+            }
             updateOutput();
         }
 
